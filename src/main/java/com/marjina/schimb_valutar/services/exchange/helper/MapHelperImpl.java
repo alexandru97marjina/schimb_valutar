@@ -1,21 +1,32 @@
 package com.marjina.schimb_valutar.services.exchange.helper;
 
 import com.marjina.schimb_valutar.common.helper.exception.NotFoundException;
+import com.marjina.schimb_valutar.common.persistence.models.Cash;
 import com.marjina.schimb_valutar.common.persistence.models.CurrencyDictionary;
 import com.marjina.schimb_valutar.common.persistence.models.CurrencyExchange;
 import com.marjina.schimb_valutar.common.persistence.models.ExchangeRate;
+import com.marjina.schimb_valutar.services.exchange.dto.cashUpdate.CashUpdateReqDTO;
 import com.marjina.schimb_valutar.services.exchange.dto.currencyExchange.CurrencyExchangeReqDTO;
 import com.marjina.schimb_valutar.services.exchange.dto.exchangeRate.ExchangeRateReqDTO;
 import com.marjina.schimb_valutar.services.exchange.manager.currencyDictionary.CurrencyDictionaryManager;
+import com.marjina.schimb_valutar.services.exchange.manager.userManager.UserManager;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.text.ParseException;
+
+import static com.marjina.schimb_valutar.common.util.DateUtil.parseStringToDate;
+import static com.marjina.schimb_valutar.common.util.consts.GlobalConst.VALID_DATE_FORMAT;
 
 @Component
 public class MapHelperImpl implements MapHelper {
 
     @Autowired
     private CurrencyDictionaryManager currencyDictionaryManager;
+
+    @Autowired
+    private UserManager userManager;
 
     /**
      * Map ExchangeReqDTO to ExchangeRate
@@ -37,6 +48,13 @@ public class MapHelperImpl implements MapHelper {
         return exchangeRate;
     }
 
+    /**
+     * Map CurrencyExchangeReqDTO To CurrencyExchange
+     *
+     * @param reqDTO CurrencyExchangeReqDTO
+     * @return CurrencyExchange
+     * @throws NotFoundException in case of not found currency
+     */
     @Override
     public CurrencyExchange mapCurrencyExchangeReqDTOToCurrencyExchange(CurrencyExchangeReqDTO reqDTO) throws NotFoundException {
         CurrencyDictionary currencyCode = currencyDictionaryManager.getCurrencyDictionaryByCode(reqDTO.getCurrencyCode());
@@ -50,6 +68,16 @@ public class MapHelperImpl implements MapHelper {
         currencyExchange.setAmountReleased(exchangeValue * amountReceived);
 
         return currencyExchange;
+    }
+
+    @Override
+    public Cash mapCashUpdateReqDTOToCash(CashUpdateReqDTO reqDTO, Cash cash) throws NotFoundException, ParseException {
+        cash.setCurrencyDictionary(currencyDictionaryManager.getCurrencyDictionaryByCode(reqDTO.getCurrencyCode()));
+        cash.setUser(userManager.getUserByUserName(reqDTO.getUserName()));
+        cash.setCashAmount(reqDTO.getCashAmount());
+        cash.setDate(parseStringToDate(reqDTO.getDate(), VALID_DATE_FORMAT));
+
+        return cash;
     }
 
 

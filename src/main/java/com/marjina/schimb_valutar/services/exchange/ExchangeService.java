@@ -7,6 +7,8 @@ import com.marjina.schimb_valutar.services.exchange.dto.currencyExchange.Currenc
 import com.marjina.schimb_valutar.services.exchange.dto.exchangeRate.ExchangeRateListReqDTO;
 import com.marjina.schimb_valutar.services.exchange.dto.exchangeRate.ExchangeRateResDTO;
 
+import java.text.ParseException;
+
 public interface ExchangeService {
 
     void saveExchangeRates(ExchangeRateListReqDTO exchangeRateListReqDTO);
@@ -15,6 +17,6 @@ public interface ExchangeService {
 
     CurrencyExchangeResDTO exchange(CurrencyExchangeReqDTO reqDTO) throws NotFoundException;
 
-    void updateCashAmount(CashUpdateReqDTO reqDTO);
+    void updateCashAmount(CashUpdateReqDTO reqDTO) throws NotFoundException, ParseException;
 
 }

@@ -12,6 +12,13 @@ public class CurrencyDictionaryManagerImpl implements CurrencyDictionaryManager 
     @Autowired
     private CurrencyDictionaryRepository currencyDictionaryDAO;
 
+    /**
+     * Get Currency dictionary
+     *
+     * @param code String code
+     * @return CurrencyDictionary
+     * @throws NotFoundException in case of not found currency
+     */
     @Override
     public CurrencyDictionary getCurrencyDictionaryByCode(String code) throws NotFoundException {
         return  currencyDictionaryDAO.findFirstByCurrencyCode(code.toUpperCase()).orElseThrow(

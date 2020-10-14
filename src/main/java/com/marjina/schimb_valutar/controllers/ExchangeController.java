@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.websocket.server.PathParam;
 
+import java.text.ParseException;
+
 import static com.marjina.schimb_valutar.common.util.consts.GlobalConst.SUCCESS;
 import static java.util.Collections.emptyList;
 
@@ -62,13 +64,13 @@ public class ExchangeController {
     }
 
     /**
-     * Make an exchange
+     * Update cash amount
      *
      * @return Response entity
      */
-    @ApiOperation(value = "Make an exchange")
+    @ApiOperation(value = "Update cash amount")
     @PutMapping("/update/cash")
-    public ResponseEntity<ResponseDTO> updateCash(@RequestBody CashUpdateReqDTO reqDTO) throws NotFoundException {
+    public ResponseEntity<ResponseDTO> updateCash(@RequestBody CashUpdateReqDTO reqDTO) throws NotFoundException, ParseException {
         exchangeService.updateCashAmount(reqDTO);
 
         return ResponseEntity.ok(new ResponseDTO<>(SUCCESS, null, null, emptyList()));

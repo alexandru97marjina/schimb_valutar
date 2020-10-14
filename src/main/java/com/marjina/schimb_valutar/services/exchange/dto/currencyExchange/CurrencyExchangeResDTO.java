@@ -11,6 +11,11 @@ public class CurrencyExchangeResDTO {
     private Double amountReceived;
     private Double amountReleased;
 
+    /**
+     * Init CurrencyExchangeResDTO by currencyExchange
+     *
+     * @param currencyExchange CurrencyExchangeResDTO resDTO
+     */
     public CurrencyExchangeResDTO(CurrencyExchange currencyExchange){
         this.currencyCode = currencyExchange.getCurrencyCode().getCurrencyCode();
         this.exchangeValue = currencyExchange.getExchangeValue();

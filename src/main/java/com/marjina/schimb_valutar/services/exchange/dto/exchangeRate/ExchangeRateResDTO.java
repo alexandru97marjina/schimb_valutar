@@ -4,6 +4,7 @@ import com.marjina.schimb_valutar.common.persistence.models.ExchangeRate;
 import lombok.Data;
 
 import static com.marjina.schimb_valutar.common.util.DateUtil.parseDateToString;
+import static com.marjina.schimb_valutar.common.util.consts.GlobalConst.VALID_DATE_FORMAT;
 
 @Data
 public class ExchangeRateResDTO {
@@ -22,7 +23,7 @@ public class ExchangeRateResDTO {
         this.currencyCode = exchangeRate.getCurrencyCode().getCurrencyCode();
         this.baseRate = exchangeRate.getBaseRate();
         this.exchangeValue = exchangeRate.getExchangeValue();
-        this.date = parseDateToString(exchangeRate.getDate(),"dd/MM/yyyy");
+        this.date = parseDateToString(exchangeRate.getDate(),VALID_DATE_FORMAT);
     }
 
 }

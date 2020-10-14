@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.ParseException;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -80,6 +81,13 @@ public class ExchangeServiceImpl implements ExchangeService {
         return exchangeRate != null ? new ExchangeRateResDTO(exchangeRate) : null;
     }
 
+    /**
+     * Make a currency exchange
+     *
+     * @param reqDTO CurrencyExchangeReqDTO reqDTO
+     * @return CurrencyExchangeResDTO
+     * @throws NotFoundException in case of not found currency
+     */
     @Override
     public CurrencyExchangeResDTO exchange(CurrencyExchangeReqDTO reqDTO) throws NotFoundException {
         CurrencyExchange currencyExchange = mapHelper.mapCurrencyExchangeReqDTOToCurrencyExchange(reqDTO);
@@ -87,13 +95,20 @@ public class ExchangeServiceImpl implements ExchangeService {
         return new CurrencyExchangeResDTO(currencyExchangeDAO.save(currencyExchange));
     }
 
+    /**
+     * Update cash amount
+     *
+     * @param reqDTO CashUpdateReqDTO
+     * @throws NotFoundException in case of not found currency or user
+     * @throws ParseException    in case of parse exception
+     */
     @Override
-    public void updateCashAmount(CashUpdateReqDTO reqDTO) {
-        Cash cash = cashDAO.findByUser_UserNameAndCurrencyDictionary_CurrencyCode(reqDTO.getUserName(),reqDTO.getCurrencyCode())
+    public void updateCashAmount(CashUpdateReqDTO reqDTO) throws NotFoundException, ParseException {
+        Cash cash = cashDAO.findByUser_UserNameAndCurrencyDictionary_CurrencyCode(reqDTO.getUserName(), reqDTO.getCurrencyCode())
                 .orElse(new Cash());
+        cash = mapHelper.mapCashUpdateReqDTOToCash(reqDTO, cash);
 
-        cash.setUser(reqDTO.getUserName());
-        cash.setCurrencyDictionary();
+        cashDAO.save(cash);
     }
 
 }

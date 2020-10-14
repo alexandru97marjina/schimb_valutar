@@ -8,6 +8,6 @@ public class CashUpdateReqDTO {
     private String userName;
     private String currencyCode;
     private Double cashAmount;
-    private String data;
+    private String date;
 
 }
